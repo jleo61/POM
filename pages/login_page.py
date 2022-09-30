@@ -6,6 +6,8 @@ import time
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import logging
+import openpyxl
+
 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -58,6 +60,21 @@ class LoginPage(BasePage):
     iframe_xpath1 = By.XPATH, "//*[@id='courses-iframe']"
     iframe_button_check = By.XPATH, "/html/body/div/header/div[3]/div/div/div[2]/nav/div[2]/ul/li[6]/a"
     mentorship_button = By.XPATH, "/html/body/div/header/div[3]/div/div/div[2]/nav/div[2]/ul/li[5]/a"
+
+
+    datebutton = By.XPATH, "//*[@id='date_form_field-btn']"
+    datetry = By.XPATH, "//h2[@class = 'uitk-date-picker-month-name uitk-type-medium']"
+    nextdaye = By.XPATH, "//*[@id='lodging_search_form']/div/div/div[2]/div/div/div/div[2]/div/div[1]/div[1]/button[2]"
+    datetry2 = By.XPATH, "//*[@id='lodging_search_form']/div/div/div[2]/div/div/div/div[2]/div/div[1]/div[2]/div[1]/h2"
+    date_choice = By.XPATH, "//*[@id='lodging_search_form']/div/div/div[2]/div/div/div/div[2]/div/div[1]/div[2]/div[1]/table/tbody/tr[2]/td[3]/button"
+    done_button = By.XPATH, "//*[@id='lodging_search_form']/div/div/div[2]/div/div/div/div[2]/div/div[2]/div/button"
+
+    confirm_date = By.XPATH, "//*[@id='submit_button']"
+
+
+    excel_path = "C:\\Users\\matne.LAPTOP-T1PULM73\\OneDrive\\Desktop\\page object model\\pages\\jj.xlsx"
+
+
 
 
 
@@ -186,12 +203,56 @@ class LoginPage(BasePage):
     def get_count_len(self):
         self.get_len_count(self.table_column_data)
         self.logger("get_count_len").warning("Couldn't get the length")
+        self.save_screenshot("try.png")
 
 
     def logger1(self):
         loger = self.logger("critical")
         loger.critical("sdsdaf")
         loger.warning("ggggg")
+
+    def getall_cookies(self):
+        self.get_cookies()
+        self.logger("Number of cookies").info(self.get_cookies())
+
+    def delet_all_cookies1(self):
+        self.delet_all_cookies()
+
+    def get_len_count1(self):
+        self.get_len_count()
+
+
+    def date_picker1(self):
+        self.date_picker(self.datebutton, self.datetry2, self.nextdaye)
+        self.click(self.date_choice)
+        self.click(self.done_button)
+        time.sleep(5)
+
+    def excel_row_count(self):
+
+        self.excel_get_row_count(self.excel_path)
+
+    def excel_coluumn_count(self):
+
+        self.excel_get_column_count(self.excel_path)
+
+    def excel_table_scraping(self):
+        # num_col = self.driver.find_elements(By.XPATH, "//*[@name ='courses']/tbody/tr[2]/td")
+        # num_row = self.driver.find_elements(By.XPATH, "//*[@name ='courses']/tbody/tr")
+        num_col = self.driver.find_elements(By.XPATH, "//div[@class = 'tableFixHead']/table/tbody/tr[1]/td")
+        num_row = self.driver.find_elements(By.XPATH, "//div[@class = 'tableFixHead']/table/tbody/tr")
+        print(len(num_row))
+        print(num_col)
+        self.table_data_scrapping_to_excel(num_row, num_col)
+
+
+
+
+
+
+
+
+
 
 
 

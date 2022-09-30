@@ -12,7 +12,10 @@ from pages.login_page import LoginPage
 def setup(request):
     driver = webdriver.Chrome()
 
+
+
     driver.get("https://rahulshettyacademy.com/AutomationPractice/")
+    # l = "https://rahulshettyacademy.com/AutomationPractice/"
     driver.implicitly_wait(20)
     driver.maximize_window()
     request.cls.loginPage = LoginPage(driver)

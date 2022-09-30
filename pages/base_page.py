@@ -9,11 +9,37 @@ from selenium.webdriver.common.keys import Keys
 import logging
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+import openpyxl
+from openpyxl import Workbook
+
+
 
 
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
+
+    def excel_get_row_count(self, file):
+        workbook = openpyxl.load_workbook(file)
+        sheet = workbook.active
+        print(sheet.max_row)
+
+    def excel_get_column_count(self, file):
+        workbook = openpyxl.load_workbook(file)
+        sheet = workbook.active
+        print(sheet.max_column)
+
+    def table_data_scrapping_to_excel(self, num_row, num_column):
+        workbook = openpyxl.load_workbook("C:\\Users\\matne.LAPTOP-T1PULM73\\OneDrive\\Desktop\\page object model\\pages\\jj.xlsx")
+        sheet = workbook.active
+        for row in range(1, len(num_row) + 1):
+            for col in range(1, len(num_column)+1):
+                ele = self.driver.find_element(By.XPATH, "//div[@class = 'tableFixHead']/table/tbody/tr["+str(row)+"]/td["+str(col)+"]")
+
+                sheet.cell(row=row, column=col).value = ele.text
+
+                print(ele.text, end="      ")
+            workbook.save(filename="C:\\Users\\matne.LAPTOP-T1PULM73\\OneDrive\\Desktop\\page object model\\pages\\jj.xlsx")
 
     def logger(self, title):
         logger = logging.getLogger(title)
@@ -105,7 +131,54 @@ class BasePage:
 
     def get_len_count(self, locator):
         data = self.driver.find_elements(*locator)
-        print(len(data))
+        return data
+
+    def save_screenshot(self, filepath):
+        self.driver.save_screenshot(filepath)
+
+    def get_cookies(self):
+        cookies = self.driver.get_cookies()
+        for ac in cookies:
+            print(ac)
+        return len(cookies)
+
+    def delet_all_cookies(self):
+        self.driver.delete_all_cookies()
+
+    def delete_single_cookie(self, cookie_name):
+        self.driver.delete_cookie(cookie_name)
+
+    def date_picker(self, button_locator, element, next_button):
+        self.click(button_locator)
+        time.sleep(2)
+        while True:
+            ele = self.driver.find_element(*element)
+            if ele.text == "March 2023":
+                break
+            else:
+                self.click(next_button)
+
+            # iterate through for a desired dates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

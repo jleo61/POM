@@ -89,11 +89,33 @@ class TestLogin(BaseTest):
     #     self.loginPage.back_towin()
 
 
-    def test_get_count_len(self):
-        self.loginPage.get_count_len()
+    # def test_get_count_len(self):
+    #     self.loginPage.get_count_len()
+    #
+    # def test_loger(self):
+    #     self.loginPage.logger1()
+    #
+    # def test_cookies(self):
+    #     self.loginPage.getall_cookies()
+    #
+    # def test_delete_all_cookies(self):
+    #     self.loginPage.delet_all_cookies1()
+    #
+    # def test_cookies2(self):
+    #     self.loginPage.getall_cookies()
+    #
+    # def test_cookies2(self):
+    #     self.loginPage.excel_row_count()
 
-    def test_loger(self):
-        self.loginPage.logger1()
+    def test_excel_row_count(self):
+        self.loginPage.excel_row_count()
+
+    def test_excel_column_count(self):
+        self.loginPage.excel_coluumn_count()
+
+    def test_data_scraping(self):
+        self.loginPage.excel_table_scraping()
+
 
 
 
