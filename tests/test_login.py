@@ -107,14 +107,51 @@ class TestLogin(BaseTest):
     # def test_cookies2(self):
     #     self.loginPage.excel_row_count()
 
-    def test_excel_row_count(self):
-        self.loginPage.excel_row_count()
+    # def test_on(self):
+    #     self.loginPage.login_new()
 
-    def test_excel_column_count(self):
-        self.loginPage.excel_coluumn_count()
+    # def test_login_excel(self):
+    #     self.loginPage.excel_table_scraping()
 
-    def test_data_scraping(self):
-        self.loginPage.excel_table_scraping()
+    # def test_radio(self):
+    #     self.loginPage.radio_b()
+    #     time.sleep(2)
+    #
+    # def test_auto(self):
+    #     self.loginPage.aauto()
+    #
+    # def test_select_dropdown(self):
+    #     self.loginPage.dro_dn()
+    #     time.sleep(2)
+
+    def test_scr(self):
+        self.loginPage.scroll_windowto()
+
+    def r(self):
+        self.loginPage.swit()
+
+    def test_fra(self):
+        self.loginPage.fr()
+
+    def test_back(self):
+        self.loginPage.switch_to_default_contentl1()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

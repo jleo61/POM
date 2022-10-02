@@ -37,7 +37,7 @@ class LoginPage(BasePage):
     choice = ["us", "eth", "au", "eng", "eri"]
     alert_xpath = By.XPATH, "//*[@id='alertbtn']"
     table_amount = By.XPATH, "//div[@class = 'tableFixHead']/table/tbody/tr/td[4]"
-    mouse_hover = By.XPATH, "//*[@id='mousehover']"
+    mouse_hover = By.XPATH, "/html/body/div[4]/div/fieldset/div"
     new_tab = By.XPATH, "//*[@id='opentab']"
     iframe_xpath = By.XPATH, "//*[@id='courses-iframe']"
     select_list1 = By.XPATH, "//*[@id='dropdown-class-example']"
@@ -58,7 +58,7 @@ class LoginPage(BasePage):
     table_column_data = By.XPATH, "//*[@id='product']/tbody/tr/td[4]"
 
     iframe_xpath1 = By.XPATH, "//*[@id='courses-iframe']"
-    iframe_button_check = By.XPATH, "/html/body/div/header/div[3]/div/div/div[2]/nav/div[2]/ul/li[6]/a"
+    iframe_button_check = By.XPATH, "/html/body/div/header/div[2]/div/div/div[2]/div[2]/a"
     mentorship_button = By.XPATH, "/html/body/div/header/div[3]/div/div/div[2]/nav/div[2]/ul/li[5]/a"
 
 
@@ -72,7 +72,20 @@ class LoginPage(BasePage):
     confirm_date = By.XPATH, "//*[@id='submit_button']"
 
 
-    excel_path = "C:\\Users\\matne.LAPTOP-T1PULM73\\OneDrive\\Desktop\\page object model\\pages\\jj.xlsx"
+
+
+    log = By.XPATH, "/html/body/div[6]/div/div/div/div/div[2]/div[1]/div/form/div[3]/button"
+
+
+    #orangehrm login test
+
+    new_tab_course_button = By.XPATH, "/html/body/div/header/div[3]/div/div/div[2]/nav/div[2]/ul/li[2]/a"
+
+    iterable_table_xpath = By.XPATH, "//div[@class='left-align']/fieldset/table/tbody/tr[2]/td[1]"
+    col_num = By.XPATH, "//div[@class='left-align']/fieldset/table/tbody/tr[2]/td"
+    row_num = By.XPATH, "//div[@class='left-align']/fieldset/table/tbody/tr"
+
+
 
 
 
@@ -86,18 +99,12 @@ class LoginPage(BasePage):
     def check_box(self):
         self.click(self.check_box1)
 
-    def auto_sugggest(self):
-        self.click(self.seggestion1_xpath)
-        self.send_keys(self.seggestion1_xpath, "eth")
-        time.sleep(2)
 
     def radio_button_options(self):
         self.click(self.radio_button_xpath)
         time.sleep(2)
 
-    def scroll_windowto(self, value):
-        self.scroll_window(value)
-        time.sleep(2)
+
 
     def mouse_hover_element(self):
         self.mouse_action_hover(self.mouse_hover)
@@ -237,13 +244,100 @@ class LoginPage(BasePage):
         self.excel_get_column_count(self.excel_path)
 
     def excel_table_scraping(self):
-        # num_col = self.driver.find_elements(By.XPATH, "//*[@name ='courses']/tbody/tr[2]/td")
-        # num_row = self.driver.find_elements(By.XPATH, "//*[@name ='courses']/tbody/tr")
-        num_col = self.driver.find_elements(By.XPATH, "//div[@class = 'tableFixHead']/table/tbody/tr[1]/td")
-        num_row = self.driver.find_elements(By.XPATH, "//div[@class = 'tableFixHead']/table/tbody/tr")
-        print(len(num_row))
-        print(num_col)
-        self.table_data_scrapping_to_excel(num_row, num_col)
+        self.table_data_scrapping_to_excel()
+
+    def link_text_search(self):
+        self.link_text("LOG IN")
+
+    def login_new(self):
+        self.click(self.log)
+
+
+
+    def login_multiple_excel(self):
+
+        self.simple_login_from_Excel()
+
+    def get_att(self):
+        self.get_attribute(self.seggestion1_xpath)
+
+    def backspace(self):
+        loc = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.seggestion1_xpath))
+        self.back_space(loc)
+
+    def auto_sugggest(self):
+        self.click(self.seggestion1_xpath)
+        self.send_keys(self.seggestion1_xpath, "123456")
+
+        time.sleep(2)
+        self.backspace()
+        time.sleep(2)
+
+    def radio_b(self):
+        self.click(self.radio_button_xpath)
+
+    def aauto(self):
+        self.send_keys(self.seggestion1_xpath, "eth")
+        time.sleep(2)
+        self.clear_text_box(self.seggestion1_xpath)
+
+    def dro_dn(self):
+        self.select_list(self.dro_down_optio).select_by_visible_text("Option3")
+
+    def wn(self):
+        current_handle1 = self.driver.current_window_handle
+        print(current_handle1)
+#click new window button
+        # self.click(self.windo_switch_button)
+
+        all_handles = self.driver.window_handles
+
+
+#switch to tne new window or tab using the basepage function
+        self.windowa_handle(current_handle1, all_handles, self.new_tab)
+
+
+# new window interaction
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(self.new_tab_course_button)).click()
+
+        self.driver.close()
+        self.driver.switch_to.window(current_handle1)
+
+    def alrt(self):
+        self.alert_box_accept(self.alert_xpath)
+
+    def exc(self):
+        self.excel_table_data_scrapping_to_excel()
+
+
+    def scroll_windowto(self):
+        self.scroll_window("1110")
+        time.sleep(2)
+
+    def swit(self):
+        self.switch_to_iframe(self.iframe_xpath)
+
+    def fr(self):
+        WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located(self.iframe_button_check)).click()
+
+    def switch_to_default_contentl1(self):
+
+        self.switch_to_default_content()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
