@@ -22,6 +22,9 @@ class BasePage:
     def click(self, locator):
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator)).click()
 
+    def clear(self, locator):
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator)).clear()
+
     def clear_text_box(self, locator1):
         locator = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator1))
         locator.send_keys(Keys.CONTROL, "a")
@@ -46,25 +49,34 @@ class BasePage:
                     sheet.cell(row=row, column=col).value = ele.text
                 workbook.save(filename="C:\\Users\\matne.LAPTOP-T1PULM73\\OneDrive\\Desktop\\page object model\\pages\\jj.xlsx")
 
+    def drop_down_lists_get(self, locator):
+        list_drop_down = WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(locator))
+        for ac in list_drop_down:
+            print(ac.text)
+
+
     def excel_get_row_count(self, file):
         workbook = openpyxl.load_workbook(file)
         sheet = workbook.active
         print(sheet.max_row)
+        return sheet.max_row
 
     def excel_get_column_count(self, file):
         workbook = openpyxl.load_workbook(file)
         sheet = workbook.active
         print(sheet.max_column)
+        return sheet.max_column
 
 
     def logger(self, title):
         logger = logging.getLogger(title)
-        fileHandler = logging.FileHandler('m43.log')
+        fileHandler = logging.FileHandler('m43.log', mode='w')
         formatter = logging.Formatter("%(asctime)s :%(levelname)s :%(name)s :%(message)s")
         formatter.datefmt="%Y-%m-%d %H:%M:%S"
         fileHandler.setFormatter(formatter)
         logger.addHandler(fileHandler)
         logger.setLevel(logging.INFO)
+
         return logger
 
 
@@ -89,7 +101,9 @@ class BasePage:
 
     def mouse_to_element(self, locator):
         mouse_action = ActionChains(self.driver)
-        mouse_action.move_to_element(locator).perform()
+        element = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located(locator))
+
+        mouse_action.move_to_element(element).perform()
 
     def alert_box_accept(self, locator):
         WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locator)).click()
@@ -144,6 +158,7 @@ class BasePage:
 
     def get_len_count(self, locator):
         data = self.driver.find_elements(*locator)
+        print(f"length is {data}")
         return data
 
     def save_screenshot(self, filepath):
