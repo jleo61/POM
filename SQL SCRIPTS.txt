@@ -1,0 +1,356 @@
+/*create DATABASE classic;*/
+
+USE classicmodels;
+show tables; 
+
+/*check number of columns*/
+
+SELECT COUNT(*) AS NumberOfColumns
+FROM information_schema.columns WHERE
+table_name ='customers';
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*check column names*/
+
+SELECT column_name FROM
+information_schema.columns where
+table_name = 'customers';
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*check data types of a column*/
+
+SELECT column_name, data_type FROM
+information_schema.columns WHERE
+table_name = 'customers';
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*check size of a column*/
+
+SELECT column_name, column_type FROM
+information_schema.columns WHERE
+table_name = 'customers';
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*check null fields*/
+
+select column_name, is_nullable FROM
+information_schema.columns WHERE
+table_name = 'customers';
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*CHECK COLUMN KEYS*/
+
+SELECT column_name, column_key FROM
+information_schema.columns WHERE
+table_name = 'customers';
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+store procedure
+
+delimiter //
+create procedure SelectAllCustomers()
+Begin
+SELECT * FROM customers;
+end //
+delimiter ;
+
+call SelectAllCustomers;
+
+
+
+
+
+  /* Inside the procedure, individual statements terminate with ; */
+		
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+/*select by cyty*/
+
+delimiter //
+create procedure SelectAllCustomersByCity(IN mycity VARCHAR(50))
+Begin
+SELECT * FROM customers WHERE city = mycity;
+end //
+delimiter ;
+
+call SelectAllCustomersByCity('singapore');
+
+/*select by cyty and postal code*/
+
+delimiter //
+create procedure SelectAllCustomersByCityAndPin(IN mycity VARCHAR (50), IN pcode VARCHAR(15))
+Begin
+SELECT * FROM customers WHERE city = mycity and postalCode = pcode;
+end //
+delimiter ;
+
+call SelectAllCustomersByCityAndPin('singapore', '079903');
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+delimiter //
+create procedure Sey(IN mycity INT)
+Begin
+SELECT * FROM employees WHERE officeCode = mycity;
+end 
+delimiter ;
+
+
+call Sey(1);
+
+
+Expand Stored Procedures, right-click the procedure and then select Script Stored Procedure as, and then select one of the following: Create To, Alter To, or Drop and Create To
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+delimiter //
+create procedure k (IN usr int,  OUT output_1 varchar(55))
+begin
+
+select * into output_1 from customers where customerNumber = usr;
+
+end //
+
+delimiter ;
+
+
+call k(112, @output_1);
+select @output_1;
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+delimiter //
+
+CREATE procedure f (IN ed INT,
+	OUT c INT,
+    OUT c2 INT,
+    OUT c3 INT)
+begin
+
+SELECT COUNT(*) INTO c FROM orders WHERE customerNumber = ed AND status = "shipped";
+
+SELECT COUNT(*) INTO c FROM orders WHERE customerNumber = ed AND status = "cancelled";
+
+SELECT COUNT(*) INTO c3 FROM orders WHERE customerNumber = ed AND status = "Resolved";
+
+
+
+end //
+
+delimiter ;
+
+call f (201, @c, @c2, @c3);
+SELECT @C, @c2, @c3;
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--TO CHECK DISTANCE ON USER INPUT ID AND BY LOCATING THE COUNTRY COLUMN 
+
+DELIMITER //
+
+CREATE PROCEDURE contri_check (IN ids INT, OUT distance VARCHAR(50))
+
+
+BEGIN
+
+DECLARE country_chosen VARCHAR(50);
+
+SELECT county INTO country_chosen FROM customers WHERE customerNumber = ids;
+	CASE country_chosen
+		WHEN "USA" THEN
+			SET distance = "2 days shipping";
+		WHEN "USA" THEN
+			SET distance = "3 days shipping";
+		ELSE
+			SET distance = "5 days shipping";
+            
+	END CASE;
+
+END //
+
+DELIMITER ;
+
+call contri_check (173, @distance);
+SELECT @distance;
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+DELIMITER //
+
+
+
+CREATE FUNCTION CustomerLevel (credit Decimal(10,2)) returns varchar(20)
+
+DETERMINISTIC
+
+begin
+
+declare customerLevel varchar(20);
+
+IF credit › 50000 THEN
+
+SET customerLevel = 'PLATINUM' ;
+
+ELSEIF (credit ›= 10000 AND
+
+credit <= 50000) THEN
+
+SET customerLevel = 'GOLD' ;
+
+ELSEIF credit < 10000 THEN
+
+SET customerLevel = 'SILVER' ;
+
+END IF;
+
+return customerLevel;
+
+end //
+
+delimiter ;
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+DELIMITER //
+
+CREATE FUNCTION full_name(fn VARCHAR(50), ln VARCHAR(50)) RETURNS VARCHAR(50)
+DETERMINISTIC
+BEGIN
+RETURN CONCAT(fn, " ", ln);
+
+
+END //
+
+DELIMITER ;
+
+SELECT full_name(customerName, contactLastName) FROM customers;
+
+
+
+or
+
+
+delimiter //
+create function credit(creditL decimal(10,2)) returns varchar(50)
+deterministic
+begin
+
+declare Climit varchar(50);
+
+IF creditL > 50000 THEN
+SET Climit = 'Not bad';
+ELSEIF creditL < 50000 THEN
+SET Climit = 'Bad Credit';
+
+end if;
+
+return Climit;
+
+end //
+delimiter ;
+
+SELECT customerName, credit(creditLimit) from customers;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# To create a trigger and get the input number and saving it to anouther table 
+
+#CREATE DATABASE youtube_trigger;
+USE youtube_trigger;
+
+
+DROP TABLE IF EXISTS before_workcenters_insert3;
+
+CREATE TABLE before_workcenters_insert3(id INT AUTO_INCREMENT PRIMARY KEY, fn VARCHAR(50), ln VARCHAR(50), capacity INT);
+
+DROP TABLE IF EXISTS WorkCenterstats2;
+CREATE TABLE WorkCenterstats2(total INT);
+
+
+DROP TRIGGER IF EXISTS before_workcenters_insert2;
+
+DELIMITER //
+CREATE TRIGGER before_workcenters_insert2 BEFORE INSERT ON before_workcenters_insert3 FOR EACH ROW
+BEGIN
+
+DECLARE rowcount INT;
+SELECT COUNT(*) INTO rowcount FROM WorkCenterstats2;
+
+IF rowcount > 0 THEN
+UPDATE WorkCenterStats2 SET total = total + new.capacity;
+ELSE
+INSERT INTO WorkCenterStats2(total) VALUES(new.capacity);
+END IF;
+END //
+DELIMITER ;
+
+
+
+SELECT * FROM before_workcenters_insert3;
+
+SELECT * FROM WorkCenterstats2;
+
+INSERT INTO before_workcenters_insert3(fn , ln, capacity) VALUES("MAT", "NEG", 500);
+
+show triggers;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# To create after insert trigger that checks the user input in the customers table and if the last name is null it returns a reminder
+
+USE youtube_trigger;
+DROP TABLE IF EXISTS check_for_null;
+DROP TABLE IF EXISTS customers;
+
+CREATE TABLE customers(id INT AUTO_INCREMENT PRIMARY KEY, fn VARCHAR(50), ln VARCHAR(50));
+CREATE TABLE check_for_null(id INT, fn VARCHAR(50), reminder VARCHAR(50));
+
+INSERT INTO CUSTOMERS(fn) VALUES("MAT");
+
+SELECT * FROM CUSTOMERS;
+SELECT * FROM check_for_null;
+
+
+DELIMITER //
+
+CREATE TRIGGER after_insert AFTER INSERT ON customers FOR EACH ROW
+BEGIN
+
+IF NEW.ln IS NULL THEN INSERT INTO check_for_null(id,fn,reminder) VALUES(NEW.id, NEW.fn, CONCAT(NEW.fn, " YOU FORGOT TO PUT LAST NAME"));
+
+END IF;
+END //
+DELIMITER ;
+
+SHOW TRIGGERS;
